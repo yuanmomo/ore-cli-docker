@@ -1,0 +1,21 @@
+version: '3'
+services:
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=18000 # 5 hours in seconds (5 * 60 * 60)
+    command: ore-app
+
+  ore-app:
+    image: yuanmomo/ore-docker:latest
+    volumes:
+        - "./solana:/root/.config/solana/"
+    environment:
+      - RPC=https://api.mainnet-beta.solana.com
+      - PRIORITY_FEE=2000
+      - THREADS=10
+    deploy:
+      mode: replicated
+      replicas: 1
